@@ -105,16 +105,16 @@ public class ToolbarController implements Initializable {
             int selectedIndex = viewPopUpList.getSelectionModel().getSelectedIndex();
             switch (selectedIndex) {
                 case 0:
-                    Logger.log("TodobarActionsPopUpController", "List View Selected");
+                    Logger.log("ToolbarViewOptionsPopUpController", "List View Selected");
                     break;
                 case 1:
-                    Logger.log("TodobarActionsPopUpController", "Priority View is not supported in this version!");
+                    Logger.log("ToolbarViewOptionsPopUpController", "Priority View is not supported in this version!");
                     break;
                 case 2:
-                    Logger.log("TodobarActionsPopUpController", "Status View is not supported in this version!");
+                    Logger.log("ToolbarViewOptionsPopUpController", "Status View is not supported in this version!");
                     break;
                 default:
-                    Logger.log("TodobarActionsPopUpController", "No action is implemented for the selected option");
+                    Logger.log("ToolbarViewOptionsPopUpController", "No action is implemented for the selected option");
             }
             viewPopUp.hide();
         }

@@ -57,4 +57,22 @@ public class PomoTodoApp extends Application {
         setPrimaryStage(primaryStage);
         setScene(new ListView(tasks));
     }
+
+    @Override
+    public void init() {
+        try {
+            tasks = JsonFileIO.read();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop() {
+        try {
+            JsonFileIO.write(tasks);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
