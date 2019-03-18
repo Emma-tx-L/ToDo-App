@@ -12,11 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import model.Task;
+import ui.EditTask;
+import ui.ListView;
+import ui.PomoTodoApp;
 import utility.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 // Controller class for Todobar UI
@@ -117,16 +121,28 @@ public class TodobarController implements Initializable {
         private void submit() {
             int selectedIndex = optionPopUpList.getSelectionModel().getSelectedIndex();
             switch (selectedIndex) {
-                case 0:
-                    Logger.log("TaskOptionsPopUpController", "No functionality has been implemented yet!");
+                case 0: //EDIT
+                    Logger.log("TaskOptionsPopUpController", "Testing edit functionality");
+                    editTask();
                     break;
-                case 1:
-                    Logger.log("TaskOptionsPopUpController", "No functionality has been implemented yet!");
+                case 1: //DELETE
+                    Logger.log("TaskOptionsPopUpController", "Testing delete function");
+                    removeTask();
                     break;
                 default:
                     Logger.log("TaskOptionsPopUpController", "No action is implemented for the selected option");
             }
             optionsbarPopUp.hide();
+        }
+
+        private void removeTask() {
+            PomoTodoApp.getTasks().remove(task);
+            PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
+        }
+
+        private void editTask() {
+            EditTask editer = new EditTask(task);
+            PomoTodoApp.setScene(editer);
         }
     }
 

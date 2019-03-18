@@ -1,1 +1,1 @@
-[{"due-date":null,"description":"aaaaa","priority":{"important":false,"urgent":false},"tags":[],"status":"TODO"}]
+[{"due-date":{"month":2,"hour":12,"year":2019,"day":15,"minute":48},"description":"aabb","priority":{"important":false,"urgent":true},"tags":[],"status":"UP_NEXT"}]
