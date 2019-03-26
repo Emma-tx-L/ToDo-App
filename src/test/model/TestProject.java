@@ -335,4 +335,35 @@ public class TestProject {
         assertEquals(24, p2.getEstimatedTimeToComplete());
     }
 
+    @Test
+    void testAddSameTodoAsProject() {
+        int i = testProject.getNumberOfTasks();
+        testProject.add(testProject);
+        assertEquals(i, testProject.getNumberOfTasks());
+    }
+
+    @Test
+    void testAddSameTodo() {
+        Task t1 = new Task("1");
+
+        testProject.add(t1);
+        assertEquals(1, testProject.getNumberOfTasks());
+        testProject.add(t1);
+        assertEquals(1, testProject.getNumberOfTasks());
+    }
+
+    @Test
+    void testIsCompleted() {
+        //tasks = 0, progress = 0 (FF case)
+        assertFalse(testProject.isCompleted());
+
+        //tasks = 1, progress = 0 (TF case)
+        Task t = new Task("a");
+        testProject.add(t);
+        assertFalse(testProject.isCompleted());
+
+        //TT case
+        t.setProgress(100);
+        assertTrue(testProject.isCompleted());
+    }
 }

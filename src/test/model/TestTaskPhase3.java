@@ -362,4 +362,9 @@ class TestTaskPhase3 {
             fail();
         }
     }
+
+    @Test
+    void testNotEqualToNull() {
+        assertFalse(testTask.equals(null));
+    }
 }

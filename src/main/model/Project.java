@@ -26,6 +26,14 @@ public class Project extends Todo {
     // EFFECTS: task is added to this project (if it was not already part of it)
     //   throws NullArgumentException when task is null
     public void add(Todo task) {
+        if (task == null) {
+            throw new NullArgumentException();
+        }
+
+        if (task.equals(this)) {
+            return;
+        }
+
         if (!contains(task)) {
             tasks.add(task);
         }
@@ -35,6 +43,10 @@ public class Project extends Todo {
     // EFFECTS: removes task from this project
     //   throws NullArgumentException when task is null
     public void remove(Todo task) {
+        if (task == null) {
+            throw new NullArgumentException();
+        }
+
         if (contains(task)) {
             tasks.remove(task);
         }
@@ -82,15 +94,6 @@ public class Project extends Todo {
 //     the percentage of completion (rounded down to the nearest integer).
 //     the value returned is the average of the percentage of completion of
 //     all the tasks and sub-projects in this project.
-/*    public int getProgress() {
-        int numerator = getSumOfTaskProgress();
-        int denominator = getNumberOfTasks();
-        if (denominator == 0) {
-            return 0;
-        }
-        return (int) Math.floor(numerator / denominator);
-    }*/
-
     public int getProgress() {
         int numerator = 0;
         int denominator = 0;
