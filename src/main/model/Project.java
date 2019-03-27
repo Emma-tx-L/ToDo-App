@@ -30,11 +30,7 @@ public class Project extends Todo {
             throw new NullArgumentException();
         }
 
-        if (task.equals(this)) {
-            return;
-        }
-
-        if (!contains(task)) {
+        if (!contains(task) && !task.equals(this)) {
             tasks.add(task);
         }
     }
@@ -132,6 +128,9 @@ public class Project extends Todo {
 
     // EFFECTS: returns the number of tasks (and sub-projects) in this project
     public int getNumberOfTasks() {
+        return tasks.size();
+    }
+/*    public int getNumberOfTasks() {
         int counter = 0;
         for (Todo t : tasks) {
             if (t instanceof Task) {
@@ -142,7 +141,7 @@ public class Project extends Todo {
             }
         }
         return counter;
-    }
+    }*/
 
     // EFFECTS: returns true if every task (and sub-project) in this project is completed, and false otherwise
 //     If this project has no tasks (or sub-projects), return false.
