@@ -338,6 +338,13 @@ public class TestProject {
         p2.add(task4);
         p2.add(testProject);
         assertEquals(24, p2.getEstimatedTimeToComplete());
+
+        task1.setEstimatedTimeToComplete(5);
+        assertEquals(17 + 4, p2.getEstimatedTimeToComplete());
+
+        testProject.remove(task1);
+        assertEquals(2 + 10 + 4, p2.getEstimatedTimeToComplete());
+
     }
 
     @Test

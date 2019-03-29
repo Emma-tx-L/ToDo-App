@@ -7,7 +7,7 @@ import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo implements Iterable<Todo> {
+public class Project extends Todo implements Iterable<Todo>, Observer {
     private List<Todo> tasks;
     
     // MODIFIES: this
@@ -29,6 +29,8 @@ public class Project extends Todo implements Iterable<Todo> {
 
         if (!contains(task) && !task.equals(this)) {
             tasks.add(task);
+            task.addObserver(this);
+            task.etcChanged(task.getEstimatedTimeToComplete());
         }
     }
     
@@ -41,11 +43,13 @@ public class Project extends Todo implements Iterable<Todo> {
         }
 
         if (contains(task)) {
+            task.deleteObserver(this);
+            this.etcChanged(-task.getEstimatedTimeToComplete());
             tasks.remove(task);
         }
     }
 
-    @Override
+/*    @Override
     public int getEstimatedTimeToComplete() {
         int counter = 0;
         for (Todo t : tasks) {
@@ -57,6 +61,12 @@ public class Project extends Todo implements Iterable<Todo> {
             }
         }
         return counter;
+    }*/
+
+    //EFFECTS: returns the estimated time to completion of this based on all sub-projects/sub-tasks
+    @Override
+    public int getEstimatedTimeToComplete() {
+        return etcHours;
     }
 
     // EFFECTS: returns an unmodifiable list of tasks in this project.
@@ -105,6 +115,7 @@ public class Project extends Todo implements Iterable<Todo> {
         return (int) Math.floor(numerator / denominator);
     }
 
+    //EFFECTS: returns sum of progress of ALL sub-projects and sub-tasks
     public int getSumOfTaskProgress() {
         int counter = 0;
         for (Todo t : tasks) {
@@ -149,6 +160,24 @@ public class Project extends Todo implements Iterable<Todo> {
         }
         return tasks.contains(task);
     }
+
+/*    public boolean reallyContains(Todo task) {
+        boolean contains = false;
+        if (task == null) {
+            throw new NullArgumentException("Illegal argument: task is null");
+        }
+        for (Todo t : tasks) {
+            if (task instanceof Task) {
+                if (tasks.contains(task)) {
+                    contains = true;
+                }
+            } else {
+                Project p = (Project) t;
+                p.reallyContains(task);
+            }
+        }
+        return contains;
+    }*/
     
     @Override
     public boolean equals(Object o) {
@@ -172,6 +201,15 @@ public class Project extends Todo implements Iterable<Todo> {
         return new ProjectIterator();
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        if (this.countObservers() >= 0) {
+            this.etcChanged((int) arg);
+        }
+        etcHours = etcHours + (int) arg;
+
+    }
+
     private class ProjectIterator implements Iterator<Todo> {
         //the priority level currently iterating over
         int level = 1;
@@ -179,12 +217,14 @@ public class Project extends Todo implements Iterable<Todo> {
         int sent = 0;
 
 
-        //iterator is done if tasks are empty or if all todos have been sent
+        //EFFECTS: returns true if not all tasks have been returned by the iterator
         @Override
         public boolean hasNext() {
             return !tasks.isEmpty() && sent < tasks.size();
         }
 
+        //MODIFIES: this
+        //EFFECTS: iterates through tasks in order of decreasing priority levels
         @Override
         public Todo next() {
             if (hasNext()) {
@@ -195,7 +235,8 @@ public class Project extends Todo implements Iterable<Todo> {
                 } else { //if the task at the current position is not at the priority level
                     if (cursor >= tasks.size() - 1) { //if we are at the end of the todos
                         //look for the next priority, reset the cursor, and return the result of that
-                        cursor = resetPosition();
+                        level++;
+                        cursor = 0;
                         return next();
                     } else {
                         //else this task is not what we're looking for, increment position and keep looking
@@ -207,23 +248,22 @@ public class Project extends Todo implements Iterable<Todo> {
             throw new NoSuchElementException();
         }
 
-        //returns to the first position increases level by 1
-        private int resetPosition() {
-            level++;
-            return 0;
-        }
-
-        //increments cursor by 1 if not at the end of the list, if at the end then reset the position
+        //MODIFIES: this
+        //EFFECTS: increments cursor by 1 if not at the end of the list, if at the end then reset the position
         private int incrementCursor() {
             if (cursor >= tasks.size() - 1) {
-                return resetPosition();
+                level++;
+                cursor = 0;
             } else {
                 return cursor + 1;
             }
+            //this should never hit
+            return cursor;
         }
 
-        //if the task at the current position has the same priority as the current level
-        //save that task to return, add the position to sent, and increment cursor
+        //MODIFIES: this
+        //EFFECTS:  if the task at the current position has the same priority as the current level
+        //          save that task to return, add the position to sent, and increment cursor
         private Todo returnNextTodo() {
             Todo next = tasks.get(cursor);
             cursor = incrementCursor();

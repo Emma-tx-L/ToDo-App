@@ -122,7 +122,9 @@ public class Task extends Todo {
             throw new NegativeInputException();
         }
 
+        int changed = hours - etcHours;
         etcHours = hours;
+        etcChanged(changed);
     }
 
     // MODIFIES: this
