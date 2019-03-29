@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -365,5 +368,80 @@ public class TestProject {
         //TT case
         t.setProgress(100);
         assertTrue(testProject.isCompleted());
+    }
+
+    @Test
+    void testIterator() {
+        Project pa = new Project("Project a");
+        Task ta = new Task("Task a");
+        Project pb = new Project("Project b");
+        Task ba = new Task("Task b");
+        Project pc = new Project("Project c");
+        Task testTask = new Task("Test task");
+
+        pa.add(ta);
+        pb.add(ba);
+        pb.add(pc);
+
+        testTask.setPriority(new Priority(4));
+        testProject.add(testTask);
+        assertTrue(testProject.iterator().hasNext());
+        assertEquals(testTask,testProject.iterator().next());
+
+        pa.setPriority(new Priority(3));
+        testProject.add(pa);
+
+        ba.setPriority(new Priority(2));
+        testProject.add(ba);
+
+/*
+        for (Todo t : testProject) {
+            System.out.println(t);
+        }
+*/
+
+        List<Todo> expected = new ArrayList<>(Arrays.asList(ba, pa, testTask));
+        assertEquals(expected, iteratorHelper(testProject));
+
+        Task t4 = new Task("important and urgent");
+        t4.setPriority(new Priority(1));
+        testProject.add(t4);
+
+        expected = new ArrayList<>(Arrays.asList(t4, ba, pa, testTask));
+        assertEquals(expected, iteratorHelper(testProject));
+
+        Project p4 = new Project("important and urgent");
+        p4.setPriority(new Priority(1));
+        testProject.add(p4);
+
+        expected = new ArrayList<>(Arrays.asList(t4, p4, ba, pa, testTask));
+        assertEquals(expected, iteratorHelper(testProject));
+
+        Project p2 = new Project("important");
+        p2.setPriority(new Priority(2));
+        testProject.add(p2);
+
+        expected = new ArrayList<>(Arrays.asList(t4, p4, ba, p2, pa, testTask));
+        assertEquals(expected, iteratorHelper(testProject));
+    }
+
+
+    @Test
+    void testIteratorThrowNoSuchElementException() {
+        try {
+            testProject.iterator().next();
+            fail();
+        } catch (NoSuchElementException e) {
+            System.out.println("passed");
+        }
+    }
+
+    //returns the result of iterating through a project in the form of an arraylist
+    private List<Todo> iteratorHelper(Project p) {
+        List<Todo> result = new ArrayList<>();
+        for (Todo t : p) {
+            result.add(t);
+        }
+        return result;
     }
 }

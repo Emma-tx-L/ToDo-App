@@ -3,14 +3,11 @@ package model;
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo {
+public class Project extends Todo implements Iterable<Todo> {
     private List<Todo> tasks;
     
     // MODIFIES: this
@@ -46,11 +43,6 @@ public class Project extends Todo {
         if (contains(task)) {
             tasks.remove(task);
         }
-    }
-    
-    // EFFECTS: returns the description of this project
-    public String getDescription() {
-        return description;
     }
 
     @Override
@@ -173,5 +165,85 @@ public class Project extends Todo {
     @Override
     public int hashCode() {
         return Objects.hash(description);
+    }
+
+    @Override
+    public Iterator<Todo> iterator() {
+        return new ProjectIterator();
+    }
+
+    private class ProjectIterator implements Iterator<Todo> {
+        //the priority level currently iterating over
+        int level = 1;
+        int cursor = 0;
+        List<Integer> sent = new ArrayList();
+
+        //iterator has more elements when not all the todos have been sent
+        @Override
+        public boolean hasNext() {
+            return sent.size() < tasks.size();
+        }
+
+        @Override
+        public Todo next() {
+            if (hasNext()) {
+                //if we already looked at this position, move on
+                if (sent.contains(cursor)) {
+                    cursor = incrementCursor();
+                    return next();
+                } else if (tasks.get(cursor).getPriority().equals(new Priority(level))) {
+                    //if the task at the current position has the same priority as the current level
+                    //save that task to return, add the position to sent, and increment cursor
+                    return returnNextTodo();
+                } else { //if the task at the current position is not at the priority level
+                    if (cursor >= tasks.size() - 1) { //if we are at the end of the todos
+                        //look for the next priority, reset the cursor, and return the result of that
+                        cursor = resetPosition();
+                        return next();
+                    } else {
+                        //else this task is not what we're looking for, increment position and keep looking
+                        cursor = incrementCursor();
+                        return next();
+                    }
+                }
+            }
+            throw new NoSuchElementException();
+        }
+
+        private void addPositionToSent(int pos) {
+            if (!sent.contains(pos)) {
+                sent.add(pos);
+            }
+        }
+
+        //returns the first position that has not already been visited and increases level by 1
+        private int resetPosition() {
+            level++;
+            for (int i = 0; i <= tasks.size() - 1; i++) {
+                if (!sent.contains(i)) {
+                    return i;
+                }
+            }
+            //this should never hit
+            return 0;
+        }
+
+        //increments cursor by 1 if not at the end of the list, if at the end then reset the position
+        private int incrementCursor() {
+            if (cursor >= tasks.size() - 1) {
+                return resetPosition();
+            } else {
+                return cursor + 1;
+            }
+        }
+
+        //if the task at the current position has the same priority as the current level
+        //save that task to return, add the position to sent, and increment cursor
+        private Todo returnNextTodo() {
+            Todo next = tasks.get(cursor);
+            addPositionToSent(cursor);
+            cursor = incrementCursor();
+            return next;
+        }
     }
 }

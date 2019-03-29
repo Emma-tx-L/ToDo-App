@@ -1,11 +1,13 @@
 package model;
 
 import model.exceptions.EmptyStringException;
+import model.exceptions.NullArgumentException;
 
 public abstract class Todo {
     protected String description;
     protected int progress;
     protected int etcHours;  // Estimated Time To Complete
+    protected Priority priority;
 
     // MODIFIES: this
     // EFFECTS: sets the "description" using the given description
@@ -16,6 +18,7 @@ public abstract class Todo {
             throw new EmptyStringException("Cannot construct a task with no description");
         }
         this.description = description;
+        priority = new Priority(4);
         progress = 0;
         etcHours = 0;
     }
@@ -33,4 +36,19 @@ public abstract class Todo {
     // EFFECTS: returns an integer between 0 and 100 which represents
     //     the percentage of completion (rounded down to the closest integer).
     public abstract int getProgress();
+
+    // EFFECTS: returns the priority of this task
+    public Priority getPriority() {
+        return priority;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the priority of this task
+    //   throws NullArgumentException when priority is null
+    public void setPriority(Priority priority) {
+        if (priority == null) {
+            throw new NullArgumentException("Illegal argument: priority is null");
+        }
+        this.priority = priority;
+    }
 }
