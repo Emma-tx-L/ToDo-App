@@ -176,22 +176,19 @@ public class Project extends Todo implements Iterable<Todo> {
         //the priority level currently iterating over
         int level = 1;
         int cursor = 0;
-        List<Integer> sent = new ArrayList();
+        int sent = 0;
 
-        //iterator has more elements when not all the todos have been sent
+
+        //iterator is done if tasks are empty or if all todos have been sent
         @Override
         public boolean hasNext() {
-            return sent.size() < tasks.size();
+            return !tasks.isEmpty() && sent < tasks.size();
         }
 
         @Override
         public Todo next() {
             if (hasNext()) {
-                //if we already looked at this position, move on
-                if (sent.contains(cursor)) {
-                    cursor = incrementCursor();
-                    return next();
-                } else if (tasks.get(cursor).getPriority().equals(new Priority(level))) {
+                if (tasks.get(cursor).getPriority().equals(new Priority(level))) {
                     //if the task at the current position has the same priority as the current level
                     //save that task to return, add the position to sent, and increment cursor
                     return returnNextTodo();
@@ -210,21 +207,9 @@ public class Project extends Todo implements Iterable<Todo> {
             throw new NoSuchElementException();
         }
 
-        private void addPositionToSent(int pos) {
-            if (!sent.contains(pos)) {
-                sent.add(pos);
-            }
-        }
-
-        //returns the first position that has not already been visited and increases level by 1
+        //returns to the first position increases level by 1
         private int resetPosition() {
             level++;
-            for (int i = 0; i <= tasks.size() - 1; i++) {
-                if (!sent.contains(i)) {
-                    return i;
-                }
-            }
-            //this should never hit
             return 0;
         }
 
@@ -241,8 +226,8 @@ public class Project extends Todo implements Iterable<Todo> {
         //save that task to return, add the position to sent, and increment cursor
         private Todo returnNextTodo() {
             Todo next = tasks.get(cursor);
-            addPositionToSent(cursor);
             cursor = incrementCursor();
+            sent++;
             return next;
         }
     }

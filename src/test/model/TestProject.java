@@ -1,6 +1,8 @@
 package model;
 
 import model.exceptions.EmptyStringException;
+import model.exceptions.InvalidProgressException;
+import model.exceptions.NegativeInputException;
 import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -443,5 +445,15 @@ public class TestProject {
             result.add(t);
         }
         return result;
+    }
+
+    @Test
+    void testInvExceptionsForCoverage() {
+        new InvalidProgressException("coverage!");
+    }
+
+    @Test
+    void testNegExceptionsForCoverage() {
+        new NegativeInputException("coverage!");
     }
 }
