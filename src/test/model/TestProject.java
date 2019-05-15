@@ -316,6 +316,8 @@ public class TestProject {
 
     @Test
     void testGivenExample2GetETCTime() {
+        assertEquals(0, testProject.getEstimatedTimeToComplete());
+
         Task task1 = new Task("task1");
         Task task2 = new Task("task2");
         Task task3 = new Task("task3");

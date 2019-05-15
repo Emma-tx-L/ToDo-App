@@ -229,17 +229,13 @@ public class Project extends Todo implements Iterable<Todo>, Observer {
         public Todo next() {
             if (hasNext()) {
                 if (tasks.get(cursor).getPriority().equals(new Priority(level))) {
-                    //if the task at the current position has the same priority as the current level
-                    //save that task to return, add the position to sent, and increment cursor
                     return returnNextTodo();
-                } else { //if the task at the current position is not at the priority level
-                    if (cursor >= tasks.size() - 1) { //if we are at the end of the todos
-                        //look for the next priority, reset the cursor, and return the result of that
+                } else {
+                    if (cursor >= tasks.size() - 1) {
                         level++;
                         cursor = 0;
                         return next();
                     } else {
-                        //else this task is not what we're looking for, increment position and keep looking
                         cursor = incrementCursor();
                         return next();
                     }

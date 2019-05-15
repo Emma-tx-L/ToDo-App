@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PomoTODO_Phase4_Starter:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PomoTODO_Phase4_Starter_jar</output-path>
+    <root id="archive" name="PomoTODO_Phase4_Starter.jar">
+      <element id="module-output" name="PomoTODO_Phase4_Starter" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/commons-lang3-3.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/core-8.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/flow-8.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/fontawesomefx-commons-8.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/fontawesomefx-controls-8.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/fontawesomefx-fontawesome-4.7.0-5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jfoenix-8.0.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jfxrt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jfxswt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/Phase4Obf.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
